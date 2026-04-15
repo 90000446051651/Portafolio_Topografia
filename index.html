@@ -11,6 +11,7 @@
         :root {
             /* Paleta técnica inspirada en la imagen de campo */
             --primario: #FFCC00; /* Amarillo Oro de Precisión */
+            --primario-dim: rgba(255, 204, 0, 0.1);
             --secundario: #0A192F; /* Azul Noche Profundo */
             --acento: #FFD600; /* Amarillo más intenso */
             --fondo: #fcfcfc;
@@ -64,23 +65,28 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: 0.3s;
+            position: relative;
         }
 
+        .menu a::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2px;
+            bottom: -5px; left: 0;
+            background-color: var(--primario);
+            transition: width 0.3s;
+        }
+
+        .menu a:hover::after { width: 100%; }
         .menu a:hover { color: var(--primario); }
 
-        /* --- Hero Section (CON TU IMAGEN DE FONDO) --- */
+        /* --- Hero Section (Texto integrado con imagen) --- */
         .hero {
-            height: 100vh; /* Ocupa toda la altura de la pantalla */
-            
-            /* --- AQUÍ ESTÁ EL CAMBIO IMPORTANTE --- */
-            /* Buscamos tu imagen directamente en la carpeta del HTML */
+            height: 100vh;
+            /* Usamos tu imagen de fondo guardada, asegúrate de que esté en la misma carpeta */
             background-image: url('ImagenTitulo.png'); 
-            
-            /* Aseguramos que rellene todo el campo y esté centrada */
-            background-size: cover; 
+            background-size: cover;
             background-position: center center;
-            background-repeat: no-repeat;
-            
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -91,18 +97,18 @@
             position: relative;
         }
 
-        /* Capa oscura sutil encima de la imagen para que tu nombre se lea PERFECTO */
+        /* Máscara de gradiente para difuminar la imagen y mejorar legibilidad */
         .hero::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 25, 47, 0.5); /* Ajusta el 0.5 para más o menos oscuridad */
+            background: linear-gradient(to bottom, rgba(10,25,47,0.7) 0%, rgba(10,25,47,0.1) 40%, rgba(10,25,47,0.1) 60%, rgba(10,25,47,0.8) 100%);
             z-index: 1;
         }
 
         .hero-content {
             position: relative;
-            z-index: 2; /* Sobre la capa oscura */
+            z-index: 2; /* Sobre la máscara */
             text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
@@ -142,6 +148,7 @@
             transform: translateY(-3px);
             background: var(--acento);
             color: #000;
+            box-shadow: 0 6px 25px rgba(255, 214, 0, 0.6);
         }
 
         /* --- Secciones --- */
@@ -152,7 +159,11 @@
             font-family: var(--fuente-titulos);
             color: var(--secundario);
             font-size: 2.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 40px;
+            display: inline-block;
             position: relative;
         }
 
@@ -162,7 +173,8 @@
             width: 70px;
             height: 4px;
             background: var(--primario);
-            margin-top: 10px;
+            position: absolute;
+            bottom: -10px; left: 0;
         }
 
         /* --- Perfil Profesional --- */
@@ -170,7 +182,9 @@
             font-size: 1.1rem;
             color: var(--texto-cuerpo);
             margin-bottom: 1.5rem;
+            max-width: 800px;
         }
+        #sobre-mi p strong { color: var(--secundario); font-weight: 600; }
 
         /* --- Galería de Proyectos --- */
         .galeria {
@@ -185,21 +199,23 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: 0.4s;
-            background-color: var(--secundario);
+            transition: transform 0.4s, box-shadow 0.4s;
+            background-color: var(--secundario); /* Fondo para cuando carga la imagen */
         }
 
         .proyecto-card:hover {
             transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
         }
 
+        /* Imagen de fondo de cada proyecto */
         .proyecto-card .bg-image {
             width: 100%;
             height: 100%;
             background-size: cover;
             background-position: center;
-            transition: 0.6s;
-            filter: grayscale(20%) brightness(0.9);
+            transition: transform 0.6s;
+            filter: grayscale(20%) brightness(0.9); /* Unificado y técnico */
         }
 
         .proyecto-card:hover .bg-image {
@@ -207,6 +223,7 @@
             filter: grayscale(0%) brightness(1);
         }
 
+        /* Overlay profesional (solo en hover) */
         .proyecto-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -228,10 +245,15 @@
         .proyecto-overlay h3 { 
             font-family: var(--fuente-titulos);
             font-size: 1.6rem; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 10px;
+            color: var(--blanco); /* Texto blanco sobre el gradiente */
         }
+        .proyecto-overlay p { font-size: 0.95rem; opacity: 0.9; }
 
         /* --- Contacto --- */
+        #contacto { background-color: #f4f7f6; border-radius: 15px; margin-top: 40px; }
         .contacto-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -245,10 +267,61 @@
             background: var(--blanco); 
             border-radius: 12px; 
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border-bottom: 3px solid transparent;
+            transition: 0.3s;
         }
+        .info-item:hover { border-bottom: 3px solid var(--primario); transform: translateY(-3px); }
 
         .info-item i { font-size: 2.5rem; color: var(--primario); margin-bottom: 20px; }
-        .info-item h4 { font-family: var(--fuente-titulos); color: var(--secundario); margin-bottom: 10px; }
+        .info-item h4 { font-family: var(--fuente-titulos); text-transform: uppercase; color: var(--secundario); margin-bottom: 10px; }
+        .info-item p { font-size: 1rem; color: var(--texto-cuerpo); }
+
+        /* --- SECCIÓN DEL CÓDIGO QR --- */
+        #qr-section {
+            background-color: #fafafa;
+            border-radius: 15px;
+            padding: 60px 8%;
+            max-width: 1000px;
+            margin: 60px auto;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .qr-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .qr-content p {
+            font-size: 1.1rem;
+            color: var(--texto-cuerpo);
+            max-width: 600px;
+            margin-bottom: 10px;
+        }
+        .qr-content p strong { color: var(--secundario); font-weight: 600; }
+
+        .qr-wrapper {
+            background-color: var(--blanco);
+            border: 5px solid var(--blanco); /* Borde blanco alrededor */
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .qr-wrapper:hover {
+            transform: scale(1.03); /* Un pequeño zoom técnico */
+        }
+
+        .qr-wrapper img {
+            width: 250px; /* Tamaño del QR */
+            height: auto;
+            display: block;
+            border: 2px solid var(--primario); /* Borde amarillo alrededor */
+            border-radius: 5px;
+        }
 
         /* --- Footer --- */
         footer {
@@ -256,6 +329,7 @@
             color: rgba(255,255,255,0.7);
             text-align: center;
             padding: 50px 8%;
+            font-size: 0.9rem;
         }
         footer span { color: var(--primario); }
     </style>
@@ -266,60 +340,4 @@
         <div class="logo">AFRM <span>Topografía</span></div>
         <div class="menu">
             <a href="#inicio">Inicio</a>
-            <a href="#sobre-mi">Perfil</a>
-            <a href="#proyectos">Proyectos</a>
-            <a href="#contacto">Contacto</a>
-        </div>
-    </nav>
-
-    <header class="hero" id="inicio">
-        <div class="hero-content">
-            <h1>Andrés Felipe Ramos</h1>
-            <p>Ingeniería y Precisión Geoespacial de Vanguardia</p>
-            <button class="btn-main" onclick="document.getElementById('proyectos').scrollIntoView({behavior:'smooth'})">Ver Soluciones</button>
-        </div>
-    </header>
-
-    <main>
-        <section id="sobre-mi">
-            <h2>Perfil Profesional</h2>
-            <p>Tecnólogo en Topografía enfocado en la aplicación de tecnologías de captura masiva de datos y procesamiento geoespacial avanzado.</p>
-        </section>
-
-        <section id="proyectos">
-            <h2>Proyectos Destacados</h2>
-            <div class="galeria">
-                <article class="proyecto-card">
-                    <div class="bg-image" style="background-image: url('url_proyecto1_rtk.jpg');"></div>
-                    <div class="proyecto-overlay">
-                        <h3>Levantamiento RTK</h3>
-                        <p>Georreferenciación centimétrica para deslinde de predios rurales.</p>
-                    </div>
-                </article>
-                </div>
-        </section>
-
-        <section id="contacto">
-            <h2>Hablemos de tu próximo proyecto</h2>
-            <div class="contacto-grid">
-                <div class="info-item">
-                    <i class="fas fa-envelope-open-text"></i>
-                    <h4>Correo</h4>
-                    <p>andres.ramos@ejemplo.com</p>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h4>Teléfono</h4>
-                    <p>+57 300 000 0000</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2026 — Andrés Felipe Ramos Monroy | Servicios Profesionales de <span>Topografía</span></p>
-    </footer>
-
-</body>
-</html>
 
